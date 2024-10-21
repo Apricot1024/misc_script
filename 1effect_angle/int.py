@@ -13,11 +13,6 @@ theta_c = 0 / 180 * np.pi  # 探测窗口中心角度 (rad)
 # theta_c_range = np.linspace(-np.pi/8, np.pi/8, 100)  # 中心角度的范围
 n_particles = 100000  # 模拟出射粒子数目
 
-
-# 定义二维高斯分布函数
-def gaussian_2d(x, y, sigma):
-    return (1 / (2 * np.pi * sigma**2)) * np.exp(-(x**2 + y**2) / (2 * sigma**2))
-
 # 以二维高斯分布在束斑范围内抽样一点 (x, y)
 def sample_point_from_gaussian(sigma):
     x = np.random.normal(0, sigma)
