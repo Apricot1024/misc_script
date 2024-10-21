@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 phi = 15  # 束斑直径 (mm)
 R = phi / 2  # 束斑的半径 (mm)
 # sigma = phi / (2 * np.sqrt(2 * np.log(2)))  # 高斯分布标准差
-sigma = phi / 6  # 高斯分布标准差，取3sigma为束斑范围
+sigma = phi / 6  # 高斯分布标准差，取2.35sigma(FWHM)为束斑范围
 w = 20  # 探测窗口宽度 (mm)
 h = 30  # 探测窗口高度 (mm)
 rd = 275  # 探测器与靶的距离 (mm)
