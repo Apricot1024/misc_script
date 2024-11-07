@@ -6,7 +6,7 @@ class TimeCalcApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Time Calculator")
-        self.geometry("400x400")
+        self.geometry("600x400")
 
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(expand=True, fill='both')
