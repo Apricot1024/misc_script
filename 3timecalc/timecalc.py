@@ -1,60 +1,65 @@
-import tkinter as tk
-from tkinter import ttk
 from datetime import datetime, timedelta
+import tkinter as tk
+from tkinter import messagebox
 
-class TimeCalculator:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Time Calculator")
+def calculate_time_difference():
+    try:
+        time1 = datetime.strptime(entry_time1.get(), '%Y/%m/%d/%H/%M/%S')
+        time2 = datetime.strptime(entry_time2.get(), '%Y/%m/%d/%H/%M/%S')
+        difference = abs(time2 - time1)
+        messagebox.showinfo("Time Difference", f"Time Difference: {difference}")
+    except ValueError:
+        messagebox.showerror("Invalid Input", "Please enter valid date and time in YYYY/MM/DD/HH/mm/ss format")
 
-        self.create_widgets()
+def calculate_new_time():
+    try:
+        time = datetime.strptime(entry_time.get(), '%Y/%m/%d/%H/%M/%S')
+        seconds = int(entry_seconds.get())
+        new_time = time + timedelta(seconds=seconds)
+        messagebox.showinfo("New Time", f"New Time: {new_time.strftime('%Y/%m/%d/%H/%M/%S')}")
+    except ValueError:
+        messagebox.showerror("Invalid Input", "Please enter valid date and time in YYYY/MM/DD/HH/mm/ss format and seconds as integer")
 
-    def create_widgets(self):
-        self.start_label = ttk.Label(self.root, text="Start Time (YYYY/MM/DD/HH/mm/ss):")
-        self.start_label.grid(column=0, row=0, padx=10, pady=5)
-        self.start_entry = ttk.Entry(self.root)
-        self.start_entry.grid(column=1, row=0, padx=10, pady=5)
+def convert_seconds():
+    try:
+        seconds = int(entry_convert_seconds.get())
+        days = seconds // (24 * 3600)
+        seconds %= (24 * 3600)
+        hours = seconds // 3600
+        seconds %= 3600
+        minutes = seconds // 60
+        seconds %= 60
+        messagebox.showinfo("Converted Time", f"{days} days, {hours} hours, {minutes} minutes, {seconds} seconds")
+    except ValueError:
+        messagebox.showerror("Invalid Input", "Please enter seconds as integer")
 
-        self.end_label = ttk.Label(self.root, text="End Time (YYYY/MM/DD/HH/mm/ss):")
-        self.end_label.grid(column=0, row=1, padx=10, pady=5)
-        self.end_entry = ttk.Entry(self.root)
-        self.end_entry.grid(column=1, row=1, padx=10, pady=5)
+root = tk.Tk()
+root.title("Time Calculator")
 
-        self.calc_diff_button = ttk.Button(self.root, text="Calculate Difference", command=self.calculate_difference)
-        self.calc_diff_button.grid(column=0, row=2, padx=10, pady=5)
+tk.Label(root, text="Time 1 (YYYY/MM/DD/HH/mm/ss):").grid(row=0, column=0)
+entry_time1 = tk.Entry(root)
+entry_time1.grid(row=0, column=1)
 
-        self.diff_result_label = ttk.Label(self.root, text="")
-        self.diff_result_label.grid(column=1, row=2, padx=10, pady=5)
+tk.Label(root, text="Time 2 (YYYY/MM/DD/HH/mm/ss):").grid(row=1, column=0)
+entry_time2 = tk.Entry(root)
+entry_time2.grid(row=1, column=1)
 
-        self.time_label = ttk.Label(self.root, text="Time (YYYY/MM/DD/HH/mm/ss):")
-        self.time_label.grid(column=0, row=3, padx=10, pady=5)
-        self.time_entry = ttk.Entry(self.root)
-        self.time_entry.grid(column=1, row=3, padx=10, pady=5)
+tk.Button(root, text="Calculate Difference", command=calculate_time_difference).grid(row=2, column=0, columnspan=2)
 
-        self.delta_label = ttk.Label(self.root, text="Time Delta (days, seconds):")
-        self.delta_label.grid(column=0, row=4, padx=10, pady=5)
-        self.delta_entry = ttk.Entry(self.root)
-        self.delta_entry.grid(column=1, row=4, padx=10, pady=5)
+tk.Label(root, text="Time (YYYY/MM/DD/HH/mm/ss):").grid(row=3, column=0)
+entry_time = tk.Entry(root)
+entry_time.grid(row=3, column=1)
 
-        self.calc_new_time_button = ttk.Button(self.root, text="Calculate New Time", command=self.calculate_new_time)
-        self.calc_new_time_button.grid(column=0, row=5, padx=10, pady=5)
+tk.Label(root, text="Seconds to Add/Subtract:").grid(row=4, column=0)
+entry_seconds = tk.Entry(root)
+entry_seconds.grid(row=4, column=1)
 
-        self.new_time_result_label = ttk.Label(self.root, text="")
-        self.new_time_result_label.grid(column=1, row=5, padx=10, pady=5)
+tk.Button(root, text="Calculate New Time", command=calculate_new_time).grid(row=5, column=0, columnspan=2)
 
-    def calculate_difference(self):
-        start_time = datetime.strptime(self.start_entry.get(), "%Y/%m/%d/%H/%M/%S")
-        end_time = datetime.strptime(self.end_entry.get(), "%Y/%m/%d/%H/%M/%S")
-        diff = end_time - start_time
-        self.diff_result_label.config(text=str(diff))
+tk.Label(root, text="Seconds to Convert:").grid(row=6, column=0)
+entry_convert_seconds = tk.Entry(root)
+entry_convert_seconds.grid(row=6, column=1)
 
-    def calculate_new_time(self):
-        time = datetime.strptime(self.time_entry.get(), "%Y/%m/%d/%H/%M/%S")
-        delta_days, delta_seconds = map(int, self.delta_entry.get().split(","))
-        new_time = time + timedelta(days=delta_days, seconds=delta_seconds)
-        self.new_time_result_label.config(text=new_time.strftime("%Y/%m/%d/%H/%M/%S"))
+tk.Button(root, text="Convert Seconds", command=convert_seconds).grid(row=7, column=0, columnspan=2)
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = TimeCalculator(root)
-    root.mainloop()
+root.mainloop()
