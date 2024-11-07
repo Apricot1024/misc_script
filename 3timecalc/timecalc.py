@@ -1,65 +1,135 @@
-from datetime import datetime, timedelta
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk
+from datetime import datetime, timedelta
 
-def calculate_time_difference():
-    try:
-        time1 = datetime.strptime(entry_time1.get(), '%Y/%m/%d/%H/%M/%S')
-        time2 = datetime.strptime(entry_time2.get(), '%Y/%m/%d/%H/%M/%S')
-        difference = abs(time2 - time1)
-        messagebox.showinfo("Time Difference", f"Time Difference: {difference}")
-    except ValueError:
-        messagebox.showerror("Invalid Input", "Please enter valid date and time in YYYY/MM/DD/HH/mm/ss format")
+class TimeCalcApp(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Time Calculator")
+        self.geometry("400x400")
 
-def calculate_new_time():
-    try:
-        time = datetime.strptime(entry_time.get(), '%Y/%m/%d/%H/%M/%S')
-        seconds = int(entry_seconds.get())
-        new_time = time + timedelta(seconds=seconds)
-        messagebox.showinfo("New Time", f"New Time: {new_time.strftime('%Y/%m/%d/%H/%M/%S')}")
-    except ValueError:
-        messagebox.showerror("Invalid Input", "Please enter valid date and time in YYYY/MM/DD/HH/mm/ss format and seconds as integer")
+        self.notebook = ttk.Notebook(self)
+        self.notebook.pack(expand=True, fill='both')
 
-def convert_seconds():
-    try:
-        seconds = int(entry_convert_seconds.get())
-        days = seconds // (24 * 3600)
-        seconds %= (24 * 3600)
-        hours = seconds // 3600
-        seconds %= 3600
-        minutes = seconds // 60
-        seconds %= 60
-        messagebox.showinfo("Converted Time", f"{days} days, {hours} hours, {minutes} minutes, {seconds} seconds")
-    except ValueError:
-        messagebox.showerror("Invalid Input", "Please enter seconds as integer")
+        self.create_time_diff_tab()
+        self.create_time_add_subtract_tab()
+        self.create_time_convert_tab()
 
-root = tk.Tk()
-root.title("Time Calculator")
+    def create_time_diff_tab(self):
+        frame = ttk.Frame(self.notebook)
+        self.notebook.add(frame, text='Time Difference')
 
-tk.Label(root, text="Time 1 (YYYY/MM/DD/HH/mm/ss):").grid(row=0, column=0)
-entry_time1 = tk.Entry(root)
-entry_time1.grid(row=0, column=1)
+        # First Time Entry
+        ttk.Label(frame, text='Start Time (YYYY/MM/DD/HH/mm/ss):').pack()
+        self.start_time_entry = ttk.Entry(frame)
+        self.start_time_entry.pack()
 
-tk.Label(root, text="Time 2 (YYYY/MM/DD/HH/mm/ss):").grid(row=1, column=0)
-entry_time2 = tk.Entry(root)
-entry_time2.grid(row=1, column=1)
+        # Second Time Entry
+        ttk.Label(frame, text='End Time (YYYY/MM/DD/HH/mm/ss):').pack()
+        self.end_time_entry = ttk.Entry(frame)
+        self.end_time_entry.pack()
 
-tk.Button(root, text="Calculate Difference", command=calculate_time_difference).grid(row=2, column=0, columnspan=2)
+        # Calculate Button
+        calc_button = ttk.Button(frame, text='Calculate Difference', command=self.calculate_difference)
+        calc_button.pack()
 
-tk.Label(root, text="Time (YYYY/MM/DD/HH/mm/ss):").grid(row=3, column=0)
-entry_time = tk.Entry(root)
-entry_time.grid(row=3, column=1)
+        # Result Label
+        self.diff_result_label = ttk.Label(frame, text='')
+        self.diff_result_label.pack()
 
-tk.Label(root, text="Seconds to Add/Subtract:").grid(row=4, column=0)
-entry_seconds = tk.Entry(root)
-entry_seconds.grid(row=4, column=1)
+    def create_time_add_subtract_tab(self):
+        frame = ttk.Frame(self.notebook)
+        self.notebook.add(frame, text='Add/Subtract Time')
 
-tk.Button(root, text="Calculate New Time", command=calculate_new_time).grid(row=5, column=0, columnspan=2)
+        # Base Time Entry
+        ttk.Label(frame, text='Base Time (YYYY/MM/DD/HH/mm/ss):').pack()
+        self.base_time_entry = ttk.Entry(frame)
+        self.base_time_entry.pack()
 
-tk.Label(root, text="Seconds to Convert:").grid(row=6, column=0)
-entry_convert_seconds = tk.Entry(root)
-entry_convert_seconds.grid(row=6, column=1)
+        # Time Period Entry
+        ttk.Label(frame, text='Time Period (HH:mm:ss):').pack()
+        self.time_period_entry = ttk.Entry(frame)
+        self.time_period_entry.pack()
 
-tk.Button(root, text="Convert Seconds", command=convert_seconds).grid(row=7, column=0, columnspan=2)
+        # Add/Subtract Option
+        self.operation = tk.StringVar(value='Add')
+        ttk.Radiobutton(frame, text='Add', variable=self.operation, value='Add').pack()
+        ttk.Radiobutton(frame, text='Subtract', variable=self.operation, value='Subtract').pack()
 
-root.mainloop()
+        # Calculate Button
+        calc_button = ttk.Button(frame, text='Calculate New Time', command=self.calculate_new_time)
+        calc_button.pack()
+
+        # Result Label
+        self.new_time_result_label = ttk.Label(frame, text='')
+        self.new_time_result_label.pack()
+
+    def create_time_convert_tab(self):
+        frame = ttk.Frame(self.notebook)
+        self.notebook.add(frame, text='Convert Time')
+
+        # Time Period Entry
+        ttk.Label(frame, text='Time Period (HH:mm:ss or seconds):').pack()
+        self.convert_time_entry = ttk.Entry(frame)
+        self.convert_time_entry.pack()
+
+        # Conversion Options
+        self.convert_option = tk.StringVar(value='To Seconds')
+        ttk.Radiobutton(frame, text='HH:mm:ss → Seconds', variable=self.convert_option, value='To Seconds').pack()
+        ttk.Radiobutton(frame, text='Seconds → HH:mm:ss', variable=self.convert_option, value='To HH:mm:ss').pack()
+
+        # Convert Button
+        convert_button = ttk.Button(frame, text='Convert', command=self.convert_time)
+        convert_button.pack()
+
+        # Result Label
+        self.convert_result_label = ttk.Label(frame, text='')
+        self.convert_result_label.pack()
+
+    def calculate_difference(self):
+        try:
+            fmt = '%Y/%m/%d/%H/%M/%S'
+            start_time_str = self.start_time_entry.get()
+            end_time_str = self.end_time_entry.get()
+            start_time = datetime.strptime(start_time_str, fmt)
+            end_time = datetime.strptime(end_time_str, fmt)
+            diff = end_time - start_time
+            self.diff_result_label.config(text=f'Difference: {diff}')
+        except ValueError:
+            self.diff_result_label.config(text='Invalid time format.')
+
+    def calculate_new_time(self):
+        try:
+            fmt = '%Y/%m/%d/%H/%M/%S'
+            base_time_str = self.base_time_entry.get()
+            base_time = datetime.strptime(base_time_str, fmt)
+            period_str = self.time_period_entry.get()
+            h, m, s = map(int, period_str.split(':'))
+            delta = timedelta(hours=h, minutes=m, seconds=s)
+            if self.operation.get() == 'Add':
+                new_time = base_time + delta
+            else:
+                new_time = base_time - delta
+            self.new_time_result_label.config(text=f'New Time: {new_time.strftime(fmt)}')
+        except ValueError:
+            self.new_time_result_label.config(text='Invalid time format.')
+
+    def convert_time(self):
+        try:
+            input_str = self.convert_time_entry.get()
+            if self.convert_option.get() == 'To Seconds':
+                h, m, s = map(int, input_str.split(':'))
+                total_seconds = h * 3600 + m * 60 + s
+                self.convert_result_label.config(text=f'Total Seconds: {total_seconds}')
+            else:
+                total_seconds = int(input_str)
+                h = total_seconds // 3600
+                m = (total_seconds % 3600) // 60
+                s = total_seconds % 60
+                self.convert_result_label.config(text=f'Time Period: {h:02d}:{m:02d}:{s:02d}')
+        except ValueError:
+            self.convert_result_label.config(text='Invalid input.')
+
+if __name__ == '__main__':
+    app = TimeCalcApp()
+    app.mainloop()
