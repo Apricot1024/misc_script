@@ -12,7 +12,7 @@ def calculate_investment(weeks, weekly_investment=30, annual_rate=0.04, fee_rate
 
     return investment
 
-weeks = 52*3  # Example: 52 weeks (1 year)
+weeks = 52*10  # Example: 52 weeks (1 year)
 final_amount = calculate_investment(weeks)
 print(f"Final amount after {weeks} weeks: {final_amount:.2f} CNY")
 
