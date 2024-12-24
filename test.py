@@ -1,24 +1,29 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
-def calculate_investment(weeks, weekly_investment=60, annual_rate=0.04, fee_rate=0.001):
+
+weeks = 52*10  # Example: 52 weeks (1 year)
+
+
+
+weeks_list = range(1, weeks+1)
+def calculate_investment(weeks, weekly_investment=80, annual_rate=0.04, fee_rate=0.001):
     daily_rate = annual_rate/252  # 252 trading days in a year
     investment = 1120
 
-    for day in range(weeks):
-        investment += weekly_investment  # Invest weekly amount divided by 5 days
+    for week in range(weeks):
+        if week >= 52*3:
+            weekly_investment = 120
+        if week >= 52*6:
+            weekly_investment = 300
+        investment += weekly_investment  # Invest weekly amount
         investment *= (1 + daily_rate*5)  # Apply daily interest rate
         investment -= weekly_investment * fee_rate  # Subtract transaction fee
 
     return investment
 
-weeks = 52*60  # Example: 52 weeks (1 year)
-final_amount = calculate_investment(weeks)
-print(f"Final amount after {weeks} weeks: {final_amount:.2f} CNY")
-
-import matplotlib.pyplot as plt
-
-weeks_list = range(1, weeks+1)
-amounts = [calculate_investment(weeks) for weeks in weeks_list]
+amounts = [calculate_investment(week) for week in weeks_list]
+print(f"Final amount after {weeks} weeks: {amounts[-1]:.2f} CNY")
 
 plt.plot(weeks_list, amounts)
 plt.xlabel('Weeks')
