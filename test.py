@@ -1,6 +1,6 @@
 import numpy as np
 
-def calculate_investment(weeks, weekly_investment=60, annual_rate=0.07, fee_rate=0.0008):
+def calculate_investment(weeks, weekly_investment=100, annual_rate=0.04, fee_rate=0.0008):
     daily_rate = annual_rate/252  # 252 trading days in a year
     investment = 0
 
@@ -11,7 +11,7 @@ def calculate_investment(weeks, weekly_investment=60, annual_rate=0.07, fee_rate
 
     return investment
 
-weeks = 52*300  # Example: 52 weeks (1 year)
+weeks = 52*10  # Example: 52 weeks (1 year)
 final_amount = calculate_investment(weeks)
 print(f"Final amount after {weeks} weeks: {final_amount:.2f} CNY")
 
