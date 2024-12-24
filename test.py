@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-weeks = 52*10  # Example: 52 weeks (1 year)
+weeks = 52*3  # Example: 52 weeks (1 year)
 
 
 
