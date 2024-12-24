@@ -1,31 +1,17 @@
-    
-# 10675 12836 16182 63108
-# 79.16 109.61 90.78
-# 7207169.59 9979508.07 8265119.44
-# 35.85890624670805 35.33169836274971 36.342887148576565 35.84449725267811
+import numpy as np
 
+def calculate_investment(weeks, weekly_investment=30, annual_rate=0.04, fee_rate=0.0008):
+    daily_rate = 0.04/252  # 252 trading days in a year
+    total_days = weeks * 5  # 5 trading days in a week
+    investment = 0
 
-import math
+    for day in range(weeks):
+        investment += weekly_investment  # Invest weekly amount divided by 5 days
+        investment *= (1 + daily_rate*5)  # Apply daily interest rate
+        investment -= weekly_investment * fee_rate  # Subtract transaction fee
 
-T_half = 63108
-lambda_ = math.log(2) / T_half
+    return investment
 
-n1 = 7207169.59
-n2 = 9979508.07
-n3 = 8265119.44
-
-a1 = 5118.799365646087 * 2363 / 2349
-a2 = 5747.855539243163 * 1884 / 1872
-a3 = 7450.522517514493 * 3051 / 3033
-
-t1 = 2363
-t2 = 1884
-t3 = 3051
-
-k1 = (n1 * (1 - math.exp(-lambda_ * t1))) / a1
-k2 = (n2 * (1 - math.exp(-lambda_ * t2))) / a2
-k3 = (n3 * (1 - math.exp(-lambda_ * t3))) / a3
-
-k_avg = (k1 + k2 + k3) / 3
-
-print(k1, k2, k3, k_avg)
+weeks = 52  # Example: 52 weeks (1 year)
+final_amount = calculate_investment(weeks)
+print(f"Final amount after {weeks} weeks: {final_amount:.2f} CNY")
