@@ -12,6 +12,18 @@ def calculate_investment(weeks, weekly_investment=30, annual_rate=0.04, fee_rate
 
     return investment
 
-weeks = 52  # Example: 52 weeks (1 year)
+weeks = 52*3  # Example: 52 weeks (1 year)
 final_amount = calculate_investment(weeks)
 print(f"Final amount after {weeks} weeks: {final_amount:.2f} CNY")
+
+import matplotlib.pyplot as plt
+
+weeks_list = range(1, weeks+1)
+amounts = [calculate_investment(weeks) for weeks in weeks_list]
+
+plt.plot(weeks_list, amounts)
+plt.xlabel('Weeks')
+plt.ylabel('Total Amount (CNY)')
+plt.title('Total Amount vs Weeks')
+plt.grid(True)
+plt.show()
