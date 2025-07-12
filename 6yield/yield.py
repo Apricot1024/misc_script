@@ -6,15 +6,17 @@ e = 1.602e-19  # Elementary charge in C
 
 m_i = 931.5e6  # Mass of the incident particle in eV/c²
 z = 1  # Charge state of the Incident particle
-tke = 64.5e3  # TKE of the Incident particle in eV
-# tke = 193e3  # TKE of the Incident particle in eV
+# tke = 64.5e3  # TKE of the Incident particle in eV
+tke = 193e3  # TKE of the Incident particle in eV
 M = 52 * 2 + 17 * 3  # Mass number of the target nucleus
 m = 1  # Mass number of the incident particle
-wg = 10e-9  # Resonance strength in eV
-# wg = 1.66e-6  # Resonance strength in eV
-detector_efficiency = 0.1  # Detector efficiency
+# wg = 10e-9  # Resonance strength in eV
+wg = 1.66e-3  # Resonance strength in eV
+detector_efficiency = 0.069  # Detector efficiency
 # e_eff = 99e-15 # Effective stopping cross section in ev atoms^-1 cm^2
-e_dedx = 0.375792  # Energy loss in MeV mg^-1 cm^2
+
+# e_dedx = 0.375792  # Energy loss in MeV mg^-1 cm^2
+e_dedx = 0.356704
 e_eff = (
     e_dedx * 1e6 / 1e-3 * 1.66e-24 * M * M / (M + m)
 )  # Effective stopping cross section in eV atoms^-1 cm^2
